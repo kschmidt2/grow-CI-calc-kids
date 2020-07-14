@@ -1,10 +1,10 @@
 var calculator = new Vue({
     el: '#calculator',
     data: {
-      principal: 1000,
-      frequency:12,
-      contribution: 100,
-      yearsToGrow: 10,
+      principal: 0,
+      frequency:365,
+      contribution: 1,
+      yearsToGrow: 0,
       interestRate: 7,
       totalPrincipal: '',
       totalReturn: '',
@@ -17,7 +17,7 @@ var calculator = new Vue({
         let P = this.principal,
             r = this.interestRate/100,
             n = this.frequency,
-            t = this.yearsToGrow,
+            t = 18-this.yearsToGrow,
             PMT = this.contribution,
             totalContributions = P + (PMT*t),
             fvOfPrincipal = P,
@@ -27,10 +27,8 @@ var calculator = new Vue({
             combined,
             iData = [],
             rData = [],
-            categories,
-            catArray = [],
+            catArray = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],
             tickInterval = 5.
-            year = new Date().getFullYear();
 
         for (i=0; i<n*t; i++) {
             fvOfPrincipal = fvOfPrincipal*(1+r/n);
@@ -41,24 +39,30 @@ var calculator = new Vue({
             iData.push(totalInvestment);
             rData.push(totalReturn);
 
-            categories = i + 1 + (year-2000);
-            categories.toString();
-            categories = "'" + categories;
-            catArray.push(categories)
         }
+
 
         iData.unshift(P);
         rData.unshift(0);
-        catArray.unshift(year);
+        
 
-        if (n==12) {  
-            iData = iData.filter((element, index) => {
-                return index % 12 === 0;
-            })
-            rData = rData.filter((element, index) => {
-                return index % 12 === 0;
-            })
-        }
+        iData = iData.filter((element, index) => {
+            return index % 365 === 0;
+        })
+        rData = rData.filter((element, index) => {
+            return index % 365 === 0;
+        })
+
+        this.yearsToGrow = Number(this.yearsToGrow)
+
+        console.log(this.yearsToGrow)
+
+        catArray = catArray.slice(this.yearsToGrow)
+        catArray.unshift("Age " + this.yearsToGrow);
+        
+
+        console.log(catArray)
+
 
         if (iData.length > 21) {
             tickInterval = 10;
